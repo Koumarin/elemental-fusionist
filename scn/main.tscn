@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://cbydaekyq2jgi"]
+[gd_scene load_steps=4 format=3 uid="uid://cbydaekyq2jgi"]
 
 [ext_resource type="PackedScene" uid="uid://bw7b2jex6oyxp" path="res://scn/player.tscn" id="1_4ubls"]
+[ext_resource type="PackedScene" uid="uid://b5ver45yssrae" path="res://scn/enemy.tscn" id="2_xk2fe"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_s6li0"]
 size = Vector2(640, 64)
@@ -17,5 +18,9 @@ position = Vector2(320, 32)
 shape = SubResource("RectangleShape2D_s6li0")
 
 [node name="Player" parent="." instance=ExtResource("1_4ubls")]
-position = Vector2(512, 448)
+unique_name_in_owner = true
+position = Vector2(544, 416)
 collision_mask = 256
+
+[node name="Enemy" parent="." instance=ExtResource("2_xk2fe")]
+position = Vector2(96, 96)

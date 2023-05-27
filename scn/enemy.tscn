@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=3 uid="uid://b5ver45yssrae"]
+
+[sub_resource type="GDScript" id="GDScript_v1qml"]
+script/source = "extends CharacterBody2D
+
+const SPEED := 20
+
+var target = null
+
+func _ready() -> void:
+	if has_node('%Player'):
+		target = $%Player
+
+func _process(dt: float) -> void:
+	var direction: Vector2 = target.global_position - global_position
+	
+	velocity = direction * SPEED * dt
+	move_and_slide()
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_j4i2f"]
+size = Vector2(64, 64)
+
+[node name="Enemy" type="CharacterBody2D"]
+collision_layer = 16
+collision_mask = 17
+script = SubResource("GDScript_v1qml")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_j4i2f")
