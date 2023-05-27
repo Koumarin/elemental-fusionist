@@ -33,7 +33,7 @@ func random_position() -> Vector2:
 	sz = get_viewport().get_visible_rect().size
 	
 	off = Vector2(randf_range(1, sz.x), randf_range(1, sz.y))
-	pos = Vector2(sz.x / 2, sz.y / 2) + off
+	pos = sz/2 + off
 	
 	pos.x *= pow(-1, int(randi_range(0, 1)))
 	pos.y *= pow(-1, int(randi_range(0, 1)))

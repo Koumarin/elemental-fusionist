@@ -1,19 +1,89 @@
-[gd_scene load_steps=3 format=3 uid="uid://bw7b2jex6oyxp"]
+[gd_scene load_steps=11 format=3 uid="uid://bw7b2jex6oyxp"]
+
+[ext_resource type="Texture2D" uid="uid://dd0p3by1q8lo0" path="res://dat/spr/scientistBack.png" id="1_f3wlw"]
+[ext_resource type="Texture2D" uid="uid://bcq0u0bpii3c5" path="res://dat/spr/scientistBack2.png" id="2_t1qim"]
+[ext_resource type="Texture2D" uid="uid://cos65yltmge5x" path="res://dat/spr/scientistFront.png" id="3_hm6f0"]
+[ext_resource type="Texture2D" uid="uid://cgdp48lcq0bou" path="res://dat/spr/scientistFront2.png" id="4_h2cix"]
+[ext_resource type="Texture2D" uid="uid://lxopbotlxb75" path="res://dat/spr/scientistSide2.png" id="5_qddfl"]
+[ext_resource type="Texture2D" uid="uid://darj50ddid0fl" path="res://dat/spr/scientistSide.png" id="6_gt66s"]
+[ext_resource type="Texture2D" uid="uid://doiutc1u21cjd" path="res://dat/spr/hands.png" id="7_0xgll"]
 
 [sub_resource type="GDScript" id="GDScript_2d473"]
 script/source = "extends CharacterBody2D
 
 const SPEED = 300.0
 
+@onready var spr  := $%Sprite
+@onready var hand := $%Hand
+
+func _ready() -> void:
+	spr.play('front')
+
 func _physics_process(delta: float) -> void:
 	var direction := Input.get_vector('move-left', 'move-right', 'move-up', 'move-down')
 	
+	if direction.y > 0:
+		spr.play('front')
+		hand.z_index = 0
+	elif direction.y < 0:
+		spr.play('back')
+		hand.z_index = -1
+	elif direction.x > 0:
+		spr.play('right')
+		hand.z_index = 0
+	elif direction.x < 0:
+		spr.play('left')
+		hand.z_index = 0
+	
 	velocity = direction * SPEED
 	move_and_slide()
+	
+	hand.look_at(get_global_mouse_position())
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6q5oe"]
 size = Vector2(55.7806, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jyxiq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_f3wlw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_t1qim")
+}],
+"loop": true,
+"name": &"back",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_hm6f0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_h2cix")
+}],
+"loop": true,
+"name": &"front",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_qddfl")
+}],
+"loop": true,
+"name": &"left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_gt66s")
+}],
+"loop": true,
+"name": &"right",
+"speed": 5.0
+}]
 
 [node name="Player" type="CharacterBody2D"]
 collision_mask = 273
@@ -22,3 +92,17 @@ script = SubResource("GDScript_2d473")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 scale = Vector2(1.14735, 1)
 shape = SubResource("RectangleShape2D_6q5oe")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_jyxiq")
+animation = &"front"
+
+[node name="Hand" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="Sprite" type="Sprite2D" parent="Hand"]
+position = Vector2(-8, 0)
+texture = ExtResource("7_0xgll")
+flip_h = true
