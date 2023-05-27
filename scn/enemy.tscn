@@ -3,7 +3,7 @@
 [sub_resource type="GDScript" id="GDScript_v1qml"]
 script/source = "extends CharacterBody2D
 
-const SPEED := 20
+const SPEED := 7500
 
 var target = null
 
@@ -12,10 +12,12 @@ func _ready() -> void:
 		target = $%Player
 
 func _process(dt: float) -> void:
-	var direction: Vector2 = target.global_position - global_position
-	
-	velocity = direction * SPEED * dt
-	move_and_slide()
+	if target:
+		var direction: Vector2 = (target.global_position - global_position).normalized()
+		
+		velocity = direction * SPEED * dt
+		move_and_slide()
+		look_at(target.global_position)
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j4i2f"]
@@ -23,8 +25,11 @@ size = Vector2(64, 64)
 
 [node name="Enemy" type="CharacterBody2D"]
 collision_layer = 16
-collision_mask = 17
+collision_mask = 273
 script = SubResource("GDScript_v1qml")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_j4i2f")
+
+[node name="Line2D" type="Line2D" parent="."]
+points = PackedVector2Array(0, 0, 32, 0)

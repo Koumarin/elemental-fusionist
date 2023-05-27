@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://cbydaekyq2jgi"]
 
 [ext_resource type="PackedScene" uid="uid://bw7b2jex6oyxp" path="res://scn/player.tscn" id="1_4ubls"]
-[ext_resource type="PackedScene" uid="uid://b5ver45yssrae" path="res://scn/enemy.tscn" id="2_xk2fe"]
+[ext_resource type="PackedScene" uid="uid://ctecipldaqqoj" path="res://scn/enemy-spawner.tscn" id="2_gqh56"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_s6li0"]
 size = Vector2(640, 64)
@@ -22,5 +22,4 @@ unique_name_in_owner = true
 position = Vector2(544, 416)
 collision_mask = 256
 
-[node name="Enemy" parent="." instance=ExtResource("2_xk2fe")]
-position = Vector2(96, 96)
+[node name="EnemySpawner" parent="." instance=ExtResource("2_gqh56")]
