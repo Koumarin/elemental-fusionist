@@ -1,12 +1,26 @@
-[gd_scene load_steps=4 format=3 uid="uid://cbydaekyq2jgi"]
+[gd_scene load_steps=6 format=3 uid="uid://cbydaekyq2jgi"]
 
 [ext_resource type="PackedScene" uid="uid://bw7b2jex6oyxp" path="res://scn/player.tscn" id="1_4ubls"]
 [ext_resource type="PackedScene" uid="uid://ctecipldaqqoj" path="res://scn/enemy-spawner.tscn" id="2_gqh56"]
+[ext_resource type="PackedScene" uid="uid://b5ver45yssrae" path="res://scn/enemy.tscn" id="2_xk2fe"]
+
+[sub_resource type="GDScript" id="GDScript_j6xss"]
+script/source = "extends Camera2D
+
+@export var target: Node2D
+
+func _process(_dt: float) -> void:
+	global_position = target.global_position
+"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_s6li0"]
 size = Vector2(640, 64)
 
 [node name="Main" type="Node"]
+
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("target")]
+script = SubResource("GDScript_j6xss")
+target = NodePath("../Player")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(256, 512)
@@ -22,4 +36,7 @@ unique_name_in_owner = true
 position = Vector2(544, 416)
 collision_mask = 256
 
-[node name="EnemySpawner" parent="." instance=ExtResource("2_gqh56")]
+[node name="EnemySpawner" parent="." node_paths=PackedStringArray("camera", "player") instance=ExtResource("2_gqh56")]
+camera = NodePath("../Camera2D")
+enemy = ExtResource("2_xk2fe")
+player = NodePath("../Player")

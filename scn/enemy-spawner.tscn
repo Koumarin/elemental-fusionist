@@ -1,0 +1,53 @@
+[gd_scene load_steps=2 format=3 uid="uid://ctecipldaqqoj"]
+
+[sub_resource type="GDScript" id="GDScript_44rre"]
+script/source = "extends Node
+
+@export var camera: Camera2D
+@export var enemy:  PackedScene
+@export var player: CharacterBody2D
+
+var spawn_amt  := 20
+var spawn_time := 1.0
+
+@onready var spawn_timer := $%SpawnTimer
+@onready var enemies     := $%Enemies
+
+func _ready() -> void:
+	while spawn_amt >= 0:
+		var new_enemy = enemy.instantiate()
+		
+		new_enemy.global_position = random_position()
+		new_enemy.target          = player
+		enemies.add_child(new_enemy)
+		spawn_timer.start(spawn_time)
+		
+		await spawn_timer.timeout
+		spawn_amt -= 1
+
+func random_position() -> Vector2:
+	var sz:  Vector2               # Camera2D size.
+	var pos: Vector2               # Position to generate mob.
+	var off: Vector2               # Offset from camera corner.
+	
+	sz = get_viewport().get_visible_rect().size
+	
+	off = Vector2(randf_range(1, sz.x), randf_range(1, sz.y))
+	pos = Vector2(sz.x / 2, sz.y / 2) + off
+	
+	pos.x *= pow(-1, int(randi_range(0, 1)))
+	pos.y *= pow(-1, int(randi_range(0, 1)))
+	
+	print('New enemy at:', camera.position + pos)
+	
+	return camera.position + pos
+"
+
+[node name="EnemySpawner" type="Node"]
+script = SubResource("GDScript_44rre")
+
+[node name="SpawnTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+
+[node name="Enemies" type="Node" parent="."]
+unique_name_in_owner = true
