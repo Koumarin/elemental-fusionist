@@ -46,13 +46,8 @@ func _process(dt: float) -> void:
 			head.play('side')
 			head.flip_h = true
 
-func _hurt() -> void:
+func hurt() -> void:
 	queue_free()
-
-func _on_hurt_box_body_entered(body: Node2D) -> void:
-	if body.is_in_group('Projectile'):
-		_hurt()
-		body.queue_free()
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j4i2f"]
@@ -142,5 +137,3 @@ collision_mask = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
 position = Vector2(0, 32)
 shape = SubResource("RectangleShape2D_pw2i7")
-
-[connection signal="body_entered" from="HurtBox" to="." method="_on_hurt_box_body_entered"]

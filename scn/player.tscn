@@ -22,12 +22,14 @@ var elements := []
 
 var health := 100
 
-var sped_up := false
+var sped_up  := false
+var shooting := false
 
-@onready var spr      := $%Sprite
-@onready var hand     := $%Hand
-@onready var hand_spr := $%Hand/Sprite
-@onready var timer    := $%Timer
+@onready var spr         := $%Sprite
+@onready var hand        := $%Hand
+@onready var hand_spr    := $%Hand/Sprite
+@onready var speed_timer := $%SpeedUpTimer
+@onready var shoot_timer := $%ShootTimer
 
 func _ready() -> void:
 	spr.play('front-left')
@@ -78,19 +80,29 @@ func _shoot() -> void:
 			print('Heal up')
 		elif current_elements_are([1, 4]):
 			speed_up()
+		elif current_elements_are([3, 4]):
+			machine_gun()
 		elif current_elements_are([0, 1]):
 			pass
 		elif current_elements_are([1, 2]):
 			pass
 		else:
-			var direction  := (get_global_mouse_position() - global_position).normalized()
-			var projectile := PROJECTILE.instantiate()
+			var projectile := make_projectile()
 			
-			projectile.direction       = direction
-			projectile.global_position = global_position
-			projectile.elements = elements.slice(0, 2)
-			$/root/Main.add_child(projectile)
-			elements = elements.slice(2)
+			if current_elements_are([0, 3]):
+				projectile.piercing = true
+
+func make_projectile() -> Node2D:
+	var direction  := (get_global_mouse_position() - global_position).normalized()
+	var projectile := PROJECTILE.instantiate()
+	
+	projectile.direction       = direction
+	projectile.global_position = global_position
+	projectile.elements = elements.slice(0, 2)
+	$/root/Main.add_child(projectile)
+	elements = elements.slice(2)
+	
+	return projectile
 
 func _can_shoot() -> bool:
 	return elements.size() > 1
@@ -98,9 +110,19 @@ func _can_shoot() -> bool:
 func speed_up() -> void:
 	if not sped_up:
 		sped_up = true
-		timer.start(5)
-		await timer.timeout
+		speed_timer.start(5)
+		await speed_timer.timeout
 		sped_up = false
+
+func machine_gun() -> void:
+	shooting = true
+	
+	while true:
+		make_projectile()
+		shoot_timer.start(0.1)
+		await shoot_timer.timeout
+	
+	shooting = false
 
 func current_elements_are(lst: Array[int]) -> bool:
 	return elements.slice(0, 2).has(lst[0]) and elements.slice(0, 2).has(lst[1])
@@ -214,5 +236,8 @@ flip_h = true
 shape = SubResource("RectangleShape2D_ab18d")
 debug_color = Color(1, 0.0117647, 0.0313726, 0.419608)
 
-[node name="Timer" type="Timer" parent="."]
+[node name="SpeedUpTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+
+[node name="ShootTimer" type="Timer" parent="."]
 unique_name_in_owner = true

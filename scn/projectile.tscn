@@ -6,6 +6,7 @@ script/source = "extends CharacterBody2D
 var direction := Vector2.ZERO
 var speed     := 40000                 # Warhammer
 var elements  := []
+var piercing  := false
 
 func _ready() -> void:
 	print(elements)
@@ -15,7 +16,12 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
-	queue_free()
+	if body.is_in_group('Enemy'):
+		body.hurt()
+		if not piercing:
+			queue_free()
+	else:
+		queue_free()
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_idael"]
@@ -33,7 +39,7 @@ shape = SubResource("RectangleShape2D_idael")
 
 [node name="Area2D" type="Area2D" parent="."]
 collision_layer = 2
-collision_mask = 256
+collision_mask = 272
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("RectangleShape2D_4vr2g")
