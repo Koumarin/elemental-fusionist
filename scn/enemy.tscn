@@ -117,7 +117,7 @@ texture = ExtResource("4_b751c")
 
 [node name="RightArm" type="Sprite2D" parent="."]
 unique_name_in_owner = true
-position = Vector2(-32, 40)
+position = Vector2(-32, 44)
 rotation = -3.14159
 scale = Vector2(2, 2)
 texture = ExtResource("5_3lo7s")
@@ -127,7 +127,7 @@ flip_h = true
 
 [node name="LeftArm" type="Sprite2D" parent="."]
 unique_name_in_owner = true
-position = Vector2(32, 40)
+position = Vector2(32, 44)
 rotation = -3.14159
 scale = Vector2(2, 2)
 texture = ExtResource("5_3lo7s")

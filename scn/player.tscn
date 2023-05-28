@@ -58,15 +58,20 @@ func _unhandled_input(event: InputEvent) -> void:
 		_shoot()
 
 func _shoot() -> void:
-	var direction  := (get_global_mouse_position() - global_position).normalized()
-	var projectile := PROJECTILE.instantiate()
-	
-	projectile.direction       = direction
-	projectile.global_position = global_position
-	$/root/Main.add_child(projectile)
+	if _can_shoot():
+		var direction  := (get_global_mouse_position() - global_position).normalized()
+		var projectile := PROJECTILE.instantiate()
+		
+		projectile.direction       = direction
+		projectile.global_position = global_position
+		$/root/Main.add_child(projectile)
+		elements = elements.slice(2)
 
-func has_element(elt: int) -> void:
-	return elements.has(elt)
+func _can_shoot() -> bool:
+	return elements.size() > 1
+
+func can_pickup(elt: int) -> bool:
+	return elements.is_empty() or elements.size() < 10 or elements[0] != elt
 
 func pickup(elt: int) -> void:
 	elements.push_front(elt)

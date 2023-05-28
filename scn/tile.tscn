@@ -13,11 +13,10 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed('pickup') and not depleted:
-		if body.has_element(type):
-			return
-		body.pickup(type)
-		depleted = true
-		visible  = false
+		if body and body.can_pickup(type):
+			body.pickup(type)
+			depleted = true
+			visible  = false
 
 func _on_body_entered(b: Node2D) -> void:
 	body = b
