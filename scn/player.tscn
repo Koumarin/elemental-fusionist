@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bw7b2jex6oyxp"]
+[gd_scene load_steps=17 format=3 uid="uid://bw7b2jex6oyxp"]
 
 [ext_resource type="Texture2D" uid="uid://ihapw5mwevxc" path="res://dat/spr/scientistBack2Walking1.png" id="1_5h0n1"]
 [ext_resource type="Texture2D" uid="uid://ce3ygehn0dc1n" path="res://dat/spr/scientistBack2Walking2.png" id="2_k07ph"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://doiutc1u21cjd" path="res://dat/spr/hands.png" id="7_0xgll"]
 [ext_resource type="Texture2D" uid="uid://l68r536y2joi" path="res://dat/spr/scientistFrontWalking2.png" id="7_b5xxf"]
 [ext_resource type="Texture2D" uid="uid://ctllx5xlndw64" path="res://dat/spr/scientistFrontWalking1.png" id="8_x7cq5"]
+[ext_resource type="Texture2D" uid="uid://cfj5d5lhk4jys" path="res://dat/spr/BALL.png" id="12_45aq7"]
 
 [sub_resource type="GDScript" id="GDScript_2d473"]
 script/source = "extends CharacterBody2D
@@ -30,6 +31,8 @@ var shooting := false
 @onready var hand_spr    := $%Hand/Sprite
 @onready var speed_timer := $%SpeedUpTimer
 @onready var shoot_timer := $%ShootTimer
+@onready var ball1       := $%Ball
+@onready var ball2       := $%Ball2
 
 func _ready() -> void:
 	spr.play('front-left')
@@ -68,6 +71,8 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	
 	hand.look_at(get_global_mouse_position())
+	ball1.modulate = Elements.color(elements[0]) if elements.size() > 0 else Color.WHITE
+	ball2.modulate = Elements.color(elements[1]) if elements.size() > 1 else Color.WHITE
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_released('shoot'):
@@ -134,7 +139,7 @@ func can_pickup(elt: int) -> bool:
 	return elements.is_empty() or elements.size() < 10 or elements[0] != elt
 
 func pickup(elt: int) -> void:
-	elements.push_front(elt)
+	elements.push_back(elt)
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6q5oe"]
@@ -229,6 +234,18 @@ position = Vector2(-8, 0)
 scale = Vector2(1.5, 1.5)
 texture = ExtResource("7_0xgll")
 flip_h = true
+
+[node name="Ball" type="Sprite2D" parent="Hand"]
+unique_name_in_owner = true
+position = Vector2(-6.5, 6.75)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("12_45aq7")
+
+[node name="Ball2" type="Sprite2D" parent="Hand"]
+unique_name_in_owner = true
+position = Vector2(14.5, 6.75)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("12_45aq7")
 
 [node name="HurtBox" type="Area2D" parent="."]
 

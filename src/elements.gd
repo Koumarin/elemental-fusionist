@@ -1,6 +1,7 @@
 extends Node
 
-const types := ['Fire', 'Ice', 'Light', 'Dark', 'Ether']
+const colors := [Color.ORANGE, Color.LIGHT_BLUE, Color.BEIGE, Color.DARK_SLATE_GRAY, Color.DARK_BLUE]
+const types  := ['Fire', 'Ice', 'Light', 'Dark', 'Ether']
 
 func amount() -> int:
 	return types.size()
@@ -10,3 +11,6 @@ func random() -> int:
 
 func name(idx: int) -> String:
 	return types[idx]
+
+func color(idx: int) -> Color:
+	return colors[idx]
