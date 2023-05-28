@@ -13,6 +13,8 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed('pickup') and not depleted:
+		if body.has_element(type):
+			return
 		body.pickup(type)
 		depleted = true
 		visible  = false
