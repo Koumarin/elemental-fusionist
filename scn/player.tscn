@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 [gd_scene load_steps=17 format=3 uid="uid://bw7b2jex6oyxp"]
+=======
+[gd_scene load_steps=21 format=3 uid="uid://bw7b2jex6oyxp"]
+>>>>>>> Stashed changes
 
 [ext_resource type="Texture2D" uid="uid://ihapw5mwevxc" path="res://dat/spr/scientistBack2Walking1.png" id="1_5h0n1"]
 [ext_resource type="Texture2D" uid="uid://ce3ygehn0dc1n" path="res://dat/spr/scientistBack2Walking2.png" id="2_k07ph"]
@@ -11,17 +15,23 @@
 [ext_resource type="Texture2D" uid="uid://doiutc1u21cjd" path="res://dat/spr/hands.png" id="7_0xgll"]
 [ext_resource type="Texture2D" uid="uid://l68r536y2joi" path="res://dat/spr/scientistFrontWalking2.png" id="7_b5xxf"]
 [ext_resource type="Texture2D" uid="uid://ctllx5xlndw64" path="res://dat/spr/scientistFrontWalking1.png" id="8_x7cq5"]
+<<<<<<< Updated upstream
 [ext_resource type="Texture2D" uid="uid://cfj5d5lhk4jys" path="res://dat/spr/BALL.png" id="12_45aq7"]
+=======
+[ext_resource type="Texture2D" uid="uid://bjs0u1g1rnfge" path="res://dat/spr/lightetherauraspr.png" id="12_rx8dt"]
+>>>>>>> Stashed changes
 
 [sub_resource type="GDScript" id="GDScript_2d473"]
 script/source = "extends CharacterBody2D
 
 const PROJECTILE := preload('res://scn/projectile.tscn')
 const SPEED = 300.0
+const lightethershieldduration = 7
 
 var elements := []
 
 var health := 100
+var invincible = false
 
 var sped_up  := false
 var shooting := false
@@ -80,17 +90,20 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _shoot() -> void:
 	if _can_shoot():
-		if current_elements_are([2, 3]):
+		# 0 fire 1 ice 2 light 3 dark 4 ether
+		if current_elements_are([2, 3]): # light dark = heal up
 			change_health(100)
 			print('Heal up')
-		elif current_elements_are([1, 4]):
+		elif current_elements_are([0, 4]): # fire ether = speed up
 			speed_up()
-		elif current_elements_are([3, 4]):
+		elif current_elements_are([3, 4]): # dark ether = machine gun
 			machine_gun()
-		elif current_elements_are([0, 1]):
+		elif current_elements_are([0, 1]): # fire ice = pushback
 			pass
-		elif current_elements_are([1, 2]):
+		elif current_elements_are([1, 2]): # ice light = wall
 			pass
+		elif current_elements_are([2, 4]): #light ether = invincible, pushback and dmg aura
+			lightethershield()
 		else:
 			var projectile := make_projectile()
 			
@@ -129,6 +142,13 @@ func machine_gun() -> void:
 	
 	shooting = false
 
+func lightethershield():
+	invincible = true
+	$lightetheraura.visible = true
+	$lightetheraura/hitbox/CollisionShape2D.disabled = false
+	$LightEtherAuraTimer.start(lightethershieldduration)
+	
+
 func current_elements_are(lst: Array[int]) -> bool:
 	return elements.slice(0, 2).has(lst[0]) and elements.slice(0, 2).has(lst[1])
 
@@ -139,7 +159,24 @@ func can_pickup(elt: int) -> bool:
 	return elements.is_empty() or elements.size() < 10 or elements[0] != elt
 
 func pickup(elt: int) -> void:
+<<<<<<< Updated upstream
 	elements.push_back(elt)
+=======
+	elements.push_front(elt)
+
+
+func _on_light_ether_aura_timer_timeout():
+	invincible = false
+	$lightetheraura.visible = false
+	$lightetheraura/hitbox/CollisionShape2D.disabled = true
+
+
+
+func _on_hitbox_area_entered(area):
+	if area.get_parent().get_parent().name == \"Enemies\":
+		area.get_parent().hurt(1)
+		#ADD PUSHBACK HERE
+>>>>>>> Stashed changes
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6q5oe"]
@@ -211,6 +248,71 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ab18d"]
 size = Vector2(48, 64)
 
+[sub_resource type="Animation" id="Animation_hyhte"]
+resource_name = "aura"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2(1, 1), Vector2(-1, 1), Vector2(1, 1), Vector2(-1, 1), Vector2(1, 1), Vector2(-1, 1), Vector2(1, 1), Vector2(-1, 1), Vector2(1, 1), Vector2(-1, 1), Vector2(1, 1), Vector2(-1, 1), Vector2(1, 1), Vector2(-1, 1), Vector2(1, 1), Vector2(-1, 1), Vector2(1, 1), Vector2(-1, 1), Vector2(1, 1), Vector2(-1, 1), Vector2(1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("..:scale")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(1.558, 1.558), Vector2(1.762, 1.762), Vector2(1.558, 1.558)]
+}
+
+[sub_resource type="Animation" id="Animation_v7s0e"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("..:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1.272, 1.272)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_eawnd"]
+_data = {
+"RESET": SubResource("Animation_v7s0e"),
+"aura": SubResource("Animation_hyhte")
+}
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ures1"]
+radius = 30.8087
+
 [node name="Player" type="CharacterBody2D"]
 collision_mask = 273
 script = SubResource("GDScript_2d473")
@@ -258,3 +360,31 @@ unique_name_in_owner = true
 
 [node name="ShootTimer" type="Timer" parent="."]
 unique_name_in_owner = true
+
+[node name="LightEtherAuraTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="lightetheraura" type="Node2D" parent="."]
+z_index = -1
+scale = Vector2(1.272, 1.272)
+
+[node name="Lightetherauraspr" type="Sprite2D" parent="lightetheraura"]
+texture = ExtResource("12_rx8dt")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="lightetheraura"]
+root_node = NodePath("../Lightetherauraspr")
+autoplay = "aura"
+libraries = {
+"": SubResource("AnimationLibrary_eawnd")
+}
+
+[node name="hitbox" type="Area2D" parent="lightetheraura"]
+collision_layer = 17
+collision_mask = 19
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="lightetheraura/hitbox"]
+shape = SubResource("CircleShape2D_ures1")
+disabled = true
+
+[connection signal="timeout" from="LightEtherAuraTimer" to="." method="_on_light_ether_aura_timer_timeout"]
+[connection signal="area_entered" from="lightetheraura/hitbox" to="." method="_on_hitbox_area_entered"]
