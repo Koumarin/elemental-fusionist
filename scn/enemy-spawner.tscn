@@ -38,8 +38,6 @@ func random_position() -> Vector2:
 	pos.x *= pow(-1, int(randi_range(0, 1)))
 	pos.y *= pow(-1, int(randi_range(0, 1)))
 	
-	print('New enemy at:', camera.position + pos)
-	
 	return camera.position + pos
 "
 

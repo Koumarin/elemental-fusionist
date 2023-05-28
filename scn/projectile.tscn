@@ -1,0 +1,37 @@
+[gd_scene load_steps=4 format=3 uid="uid://6umvnh8xuarj"]
+
+[sub_resource type="GDScript" id="GDScript_2l6b3"]
+script/source = "extends CharacterBody2D
+
+var direction := Vector2.ZERO
+var speed     := 40000                 # Warhammer
+
+func _physics_process(delta: float) -> void:
+	velocity = direction * speed * delta
+	move_and_slide()
+
+func _on_area_2d_body_entered(body: Node2D) -> void:
+	queue_free()
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_idael"]
+size = Vector2(16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4vr2g"]
+
+[node name="Projectile" type="CharacterBody2D" groups=["Projectile"]]
+collision_layer = 2
+collision_mask = 272
+script = SubResource("GDScript_2l6b3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_idael")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 256
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_4vr2g")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

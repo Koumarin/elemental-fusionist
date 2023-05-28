@@ -45,10 +45,18 @@ func _process(dt: float) -> void:
 		else:
 			head.play('side')
 			head.flip_h = true
+
+func _hurt() -> void:
+	queue_free()
+
+func _on_hurt_box_body_entered(body: Node2D) -> void:
+	if body.is_in_group('Projectile'):
+		_hurt()
+		body.queue_free()
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j4i2f"]
-size = Vector2(64, 120.61)
+size = Vector2(56, 116.589)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_dtfud"]
 animations = [{
@@ -86,7 +94,7 @@ collision_mask = 273
 script = SubResource("GDScript_v1qml")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 28)
+position = Vector2(0, 30)
 scale = Vector2(1, 0.994945)
 shape = SubResource("RectangleShape2D_j4i2f")
 
@@ -128,7 +136,11 @@ offset = Vector2(-8, -30)
 
 [node name="HurtBox" type="Area2D" parent="."]
 unique_name_in_owner = true
+collision_layer = 16
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
 position = Vector2(0, 32)
 shape = SubResource("RectangleShape2D_pw2i7")
+
+[connection signal="body_entered" from="HurtBox" to="." method="_on_hurt_box_body_entered"]
