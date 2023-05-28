@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://cbydaekyq2jgi"]
+[gd_scene load_steps=7 format=3 uid="uid://cbydaekyq2jgi"]
 
 [ext_resource type="PackedScene" uid="uid://bw7b2jex6oyxp" path="res://scn/player.tscn" id="1_4ubls"]
 [ext_resource type="PackedScene" uid="uid://ctecipldaqqoj" path="res://scn/enemy-spawner.tscn" id="2_gqh56"]
 [ext_resource type="PackedScene" uid="uid://b5ver45yssrae" path="res://scn/enemy.tscn" id="2_xk2fe"]
+[ext_resource type="PackedScene" uid="uid://cvbhfd6xqeqh7" path="res://scn/tile.tscn" id="4_5aqil"]
 
 [sub_resource type="GDScript" id="GDScript_j6xss"]
 script/source = "extends Camera2D
@@ -40,3 +41,7 @@ collision_mask = 256
 camera = NodePath("../Camera2D")
 enemy = ExtResource("2_xk2fe")
 player = NodePath("../Player")
+
+[node name="TileSpawner" type="Node" parent="."]
+
+[node name="Tile" parent="." instance=ExtResource("4_5aqil")]

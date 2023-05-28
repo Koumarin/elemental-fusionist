@@ -1,0 +1,39 @@
+[gd_scene load_steps=3 format=3 uid="uid://cvbhfd6xqeqh7"]
+
+[sub_resource type="GDScript" id="GDScript_f7a64"]
+script/source = "extends Area2D
+
+var body     = null
+var depleted = false
+
+@onready var type := Elements.random()
+
+func _ready() -> void:
+	print(Elements.name(type))
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed('pickup') and not depleted:
+		body.pickup(type)
+		depleted = true
+		visible  = false
+
+func _on_body_entered(b: Node2D) -> void:
+	body = b
+
+func _on_body_exited(_body: Node2D) -> void:
+	body = null
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cqu54"]
+size = Vector2(192, 192)
+
+[node name="Tile" type="Area2D"]
+collision_layer = 4096
+script = SubResource("GDScript_f7a64")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(96, 96)
+shape = SubResource("RectangleShape2D_cqu54")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]
