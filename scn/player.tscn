@@ -22,9 +22,12 @@ var elements := []
 
 var health := 100
 
+var sped_up := false
+
 @onready var spr      := $%Sprite
 @onready var hand     := $%Hand
 @onready var hand_spr := $%Hand/Sprite
+@onready var timer    := $%Timer
 
 func _ready() -> void:
 	spr.play('front-left')
@@ -56,7 +59,10 @@ func _physics_process(delta: float) -> void:
 	
 	hand_spr.flip_v = angle > 90 or angle < -90
 	
-	velocity = direction * SPEED
+	if sped_up:
+		velocity = direction * SPEED * 1.5
+	else:
+		velocity = direction * SPEED
 	move_and_slide()
 	
 	hand.look_at(get_global_mouse_position())
@@ -70,6 +76,12 @@ func _shoot() -> void:
 		if current_elements_are([2, 3]):
 			change_health(100)
 			print('Heal up')
+		elif current_elements_are([1, 4]):
+			speed_up()
+		elif current_elements_are([0, 1]):
+			pass
+		elif current_elements_are([1, 2]):
+			pass
 		else:
 			var direction  := (get_global_mouse_position() - global_position).normalized()
 			var projectile := PROJECTILE.instantiate()
@@ -82,6 +94,13 @@ func _shoot() -> void:
 
 func _can_shoot() -> bool:
 	return elements.size() > 1
+
+func speed_up() -> void:
+	if not sped_up:
+		sped_up = true
+		timer.start(5)
+		await timer.timeout
+		sped_up = false
 
 func current_elements_are(lst: Array[int]) -> bool:
 	return elements.slice(0, 2).has(lst[0]) and elements.slice(0, 2).has(lst[1])
@@ -188,3 +207,12 @@ position = Vector2(-8, 0)
 scale = Vector2(1.5, 1.5)
 texture = ExtResource("7_0xgll")
 flip_h = true
+
+[node name="HurtBox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+shape = SubResource("RectangleShape2D_ab18d")
+debug_color = Color(1, 0.0117647, 0.0313726, 0.419608)
+
+[node name="Timer" type="Timer" parent="."]
+unique_name_in_owner = true
