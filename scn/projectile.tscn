@@ -5,6 +5,10 @@ script/source = "extends CharacterBody2D
 
 var direction := Vector2.ZERO
 var speed     := 40000                 # Warhammer
+var elements  := []
+
+func _ready() -> void:
+	print(elements)
 
 func _physics_process(delta: float) -> void:
 	velocity = direction * speed * delta

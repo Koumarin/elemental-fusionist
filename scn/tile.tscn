@@ -3,10 +3,12 @@
 [sub_resource type="GDScript" id="GDScript_f7a64"]
 script/source = "extends Area2D
 
+@export var debug_type: int = -1
+
 var body     = null
 var depleted = false
 
-@onready var type := Elements.random()
+@onready var type := debug_type if debug_type >= 0 else Elements.random()
 
 func _ready() -> void:
 	print(Elements.name(type))

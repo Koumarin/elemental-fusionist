@@ -1,6 +1,6 @@
 extends Node
 
-const types := ['Fire', 'Rock', 'Lightning', 'Wind', 'Darkness']
+const types := ['Fire', 'Ice', 'Light', 'Dark', 'Ether']
 
 func amount() -> int:
 	return types.size()
