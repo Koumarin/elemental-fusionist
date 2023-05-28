@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://cbydaekyq2jgi"]
+[gd_scene load_steps=8 format=3 uid="uid://cbydaekyq2jgi"]
 
 [ext_resource type="PackedScene" uid="uid://bw7b2jex6oyxp" path="res://scn/player.tscn" id="1_4ubls"]
 [ext_resource type="PackedScene" uid="uid://ctecipldaqqoj" path="res://scn/enemy-spawner.tscn" id="2_gqh56"]
 [ext_resource type="PackedScene" uid="uid://b5ver45yssrae" path="res://scn/enemy.tscn" id="2_xk2fe"]
 [ext_resource type="PackedScene" uid="uid://cvbhfd6xqeqh7" path="res://scn/tile.tscn" id="4_5aqil"]
+[ext_resource type="AudioStream" uid="uid://bqmr3o3urm1qb" path="res://dat/lesongmp3.mp3" id="5_uw8br"]
 
 [sub_resource type="GDScript" id="GDScript_j6xss"]
 script/source = "extends Camera2D
@@ -48,3 +49,7 @@ player = NodePath("../Player")
 
 [node name="Tile2" parent="." instance=ExtResource("4_5aqil")]
 position = Vector2(256, 0)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_uw8br")
+autoplay = true
