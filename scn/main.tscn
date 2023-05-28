@@ -46,7 +46,7 @@ player = NodePath("../Player")
 [node name="TileSpawner" type="Node" parent="."]
 
 [node name="Tile" parent="." instance=ExtResource("4_5aqil")]
-debug_type = 3
+debug_type = 2
 
 [node name="Tile2" parent="." instance=ExtResource("4_5aqil")]
 position = Vector2(256, 0)

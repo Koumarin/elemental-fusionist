@@ -11,6 +11,7 @@ script/source = "extends CharacterBody2D
 
 const SPEED := 7500
 
+var hp = 3
 var target = null
 
 @onready var head := $%Head
@@ -46,8 +47,12 @@ func _process(dt: float) -> void:
 			head.play('side')
 			head.flip_h = true
 
-func hurt() -> void:
-	queue_free()
+func hurt(dmgtaken) -> void:
+	if hp - dmgtaken <= 0:
+		queue_free()
+	else:
+		hp -= dmgtaken
+
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j4i2f"]
