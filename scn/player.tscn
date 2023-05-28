@@ -1,12 +1,16 @@
-[gd_scene load_steps=11 format=3 uid="uid://bw7b2jex6oyxp"]
+[gd_scene load_steps=16 format=3 uid="uid://bw7b2jex6oyxp"]
 
-[ext_resource type="Texture2D" uid="uid://dd0p3by1q8lo0" path="res://dat/spr/scientistBack.png" id="1_f3wlw"]
-[ext_resource type="Texture2D" uid="uid://bcq0u0bpii3c5" path="res://dat/spr/scientistBack2.png" id="2_t1qim"]
-[ext_resource type="Texture2D" uid="uid://cos65yltmge5x" path="res://dat/spr/scientistFront.png" id="3_hm6f0"]
-[ext_resource type="Texture2D" uid="uid://cgdp48lcq0bou" path="res://dat/spr/scientistFront2.png" id="4_h2cix"]
+[ext_resource type="Texture2D" uid="uid://ihapw5mwevxc" path="res://dat/spr/scientistBack2Walking1.png" id="1_5h0n1"]
+[ext_resource type="Texture2D" uid="uid://ce3ygehn0dc1n" path="res://dat/spr/scientistBack2Walking2.png" id="2_k07ph"]
+[ext_resource type="Texture2D" uid="uid://d2cf87b7anlrg" path="res://dat/spr/scientistBackWalking1.png" id="3_l7tgn"]
+[ext_resource type="Texture2D" uid="uid://bcl2wh1533ljr" path="res://dat/spr/scientistBackWalking2.png" id="4_g6sc7"]
+[ext_resource type="Texture2D" uid="uid://cvyhow47nkh8c" path="res://dat/spr/scientistFront2Walking1.png" id="5_05adt"]
 [ext_resource type="Texture2D" uid="uid://lxopbotlxb75" path="res://dat/spr/scientistSide2.png" id="5_qddfl"]
+[ext_resource type="Texture2D" uid="uid://0842xs20ibv0" path="res://dat/spr/scientistFront2Walking2.png" id="6_e6rpb"]
 [ext_resource type="Texture2D" uid="uid://darj50ddid0fl" path="res://dat/spr/scientistSide.png" id="6_gt66s"]
 [ext_resource type="Texture2D" uid="uid://doiutc1u21cjd" path="res://dat/spr/hands.png" id="7_0xgll"]
+[ext_resource type="Texture2D" uid="uid://l68r536y2joi" path="res://dat/spr/scientistFrontWalking2.png" id="7_b5xxf"]
+[ext_resource type="Texture2D" uid="uid://ctllx5xlndw64" path="res://dat/spr/scientistFrontWalking1.png" id="8_x7cq5"]
 
 [sub_resource type="GDScript" id="GDScript_2d473"]
 script/source = "extends CharacterBody2D
@@ -27,6 +31,8 @@ func _physics_process(delta: float) -> void:
 	var direction := Input.get_vector('move-left', 'move-right', 'move-up', 'move-down')
 	var angle     := rad_to_deg(get_angle_to(get_global_mouse_position()))
 	
+	if direction == Vector2.ZERO:
+		spr.stop()
 	if direction.y > 0:
 		if direction.x < 0:
 			spr.play('front-left')
@@ -78,13 +84,16 @@ func pickup(elt: int) -> void:
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6q5oe"]
-size = Vector2(55.7806, 64)
+size = Vector2(34.8629, 52)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_jyxiq"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_t1qim")
+"texture": ExtResource("1_5h0n1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_k07ph")
 }],
 "loop": true,
 "name": &"back-left",
@@ -92,7 +101,10 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_f3wlw")
+"texture": ExtResource("3_l7tgn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_g6sc7")
 }],
 "loop": true,
 "name": &"back-right",
@@ -100,7 +112,10 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("3_hm6f0")
+"texture": ExtResource("5_05adt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_e6rpb")
 }],
 "loop": true,
 "name": &"front-left",
@@ -108,7 +123,10 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4_h2cix")
+"texture": ExtResource("7_b5xxf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_x7cq5")
 }],
 "loop": true,
 "name": &"front-right",
@@ -131,11 +149,15 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ab18d"]
+size = Vector2(48, 64)
+
 [node name="Player" type="CharacterBody2D"]
 collision_mask = 273
 script = SubResource("GDScript_2d473")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -2)
 scale = Vector2(1.14735, 1)
 shape = SubResource("RectangleShape2D_6q5oe")
 
@@ -143,7 +165,7 @@ shape = SubResource("RectangleShape2D_6q5oe")
 unique_name_in_owner = true
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_jyxiq")
-animation = &"right"
+animation = &"back-left"
 
 [node name="Hand" type="Node2D" parent="."]
 unique_name_in_owner = true
