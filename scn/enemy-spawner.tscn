@@ -19,6 +19,7 @@ func _ready() -> void:
 		
 		new_enemy.global_position = random_position()
 		new_enemy.target          = player
+		new_enemy.add_to_group('Enemy')
 		enemies.add_child(new_enemy)
 		spawn_timer.start(spawn_time)
 		
