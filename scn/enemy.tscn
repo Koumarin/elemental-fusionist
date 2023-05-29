@@ -58,6 +58,9 @@ func freeze() -> void:
 	$Timer.start(1)
 	await $Timer.timeout
 	set_process(true)
+
+func push(from: Vector2) -> void:
+	global_position += (global_position - from).normalized() * 250
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j4i2f"]

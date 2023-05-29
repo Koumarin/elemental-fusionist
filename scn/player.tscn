@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://bw7b2jex6oyxp"]
+[gd_scene load_steps=25 format=3 uid="uid://bw7b2jex6oyxp"]
 
 [ext_resource type="Texture2D" uid="uid://ihapw5mwevxc" path="res://dat/spr/scientistBack2Walking1.png" id="1_5h0n1"]
 [ext_resource type="Texture2D" uid="uid://ce3ygehn0dc1n" path="res://dat/spr/scientistBack2Walking2.png" id="2_k07ph"]
@@ -83,6 +83,7 @@ func _physics_process(delta: float) -> void:
 	hand.look_at(get_global_mouse_position())
 	ball1.modulate = Elements.color(elements[0]) if elements.size() > 0 else Color.WHITE
 	ball2.modulate = Elements.color(elements[1]) if elements.size() > 1 else Color.WHITE
+	$Area2D.look_at(get_global_mouse_position())
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_released('shoot'):
@@ -99,7 +100,8 @@ func _shoot() -> void:
 		elif current_elements_are([3, 4]): # dark ether = machine gun
 			machine_gun()
 		elif current_elements_are([0, 1]): # fire ice = pushback
-			pass
+			for e in $Area2D.get_overlapping_bodies():
+				e.push(global_position)
 		elif current_elements_are([1, 2]): # ice light = wall
 			pass
 		elif current_elements_are([1, 4]): # ice ether = freeze all
@@ -316,6 +318,9 @@ _data = {
 [sub_resource type="CircleShape2D" id="CircleShape2D_ures1"]
 radius = 30.8087
 
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_whgmd"]
+points = PackedVector2Array(0, 0, 512, 256, 512, -256)
+
 [node name="Player" type="CharacterBody2D"]
 collision_mask = 273
 script = SubResource("GDScript_2d473")
@@ -430,6 +435,13 @@ texture = ExtResource("15_cl566")
 stretch_mode = 3
 
 [node name="FreezeTimer" type="Timer" parent="."]
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 16
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("ConvexPolygonShape2D_whgmd")
 
 [connection signal="timeout" from="LightEtherAuraTimer" to="." method="_on_light_ether_aura_timer_timeout"]
 [connection signal="area_entered" from="lightetheraura/hitbox" to="." method="_on_hitbox_area_entered"]
