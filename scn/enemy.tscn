@@ -98,7 +98,7 @@ size = Vector2(64, 128)
 
 [node name="Enemy" type="CharacterBody2D"]
 collision_layer = 16
-collision_mask = 273
+collision_mask = 17
 script = SubResource("GDScript_v1qml")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
