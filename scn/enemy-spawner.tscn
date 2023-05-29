@@ -3,9 +3,13 @@
 [sub_resource type="GDScript" id="GDScript_44rre"]
 script/source = "extends Node
 
+
 @export var camera: Camera2D
 @export var enemy:  PackedScene
 @export var player: CharacterBody2D
+
+
+var enemynumber = 0
 
 var spawn_amt  := 20
 var spawn_time := 1.0
@@ -14,17 +18,38 @@ var spawn_time := 1.0
 @onready var enemies     := $%Enemies
 
 func _ready() -> void:
+	enemynumber = spawn_amt
+	createenemies(5000)
+
+
+func createenemies(speedval):
 	while spawn_amt >= 0:
 		var new_enemy = enemy.instantiate()
 		
 		new_enemy.global_position = random_position()
 		new_enemy.target          = player
+		new_enemy.SPEED = speedval
 		new_enemy.add_to_group('Enemy')
 		enemies.add_child(new_enemy)
+		
 		spawn_timer.start(spawn_time)
 		
 		await spawn_timer.timeout
 		spawn_amt -= 1
+
+func _process(delta):
+	if Elements.enemiesbeaten == enemynumber:
+		startnextwave()
+
+
+func startnextwave():
+	Elements.wavecounter += 1
+	spawn_amt  = 20 * (1 + ((Elements.wavecounter-1) * 0.2))
+	spawn_time = 1.0 * ((Elements.wavecounter-1) * 0.2)
+	enemynumber += spawn_amt
+	createenemies(5000  * (1+ ((Elements.wavecounter-1) * 0.2)))
+
+
 
 func random_position() -> Vector2:
 	var sz:  Vector2               # Camera2D size.

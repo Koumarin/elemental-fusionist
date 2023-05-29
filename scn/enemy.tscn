@@ -9,7 +9,7 @@
 [sub_resource type="GDScript" id="GDScript_v1qml"]
 script/source = "extends CharacterBody2D
 
-const SPEED := 7500
+var SPEED = 7500
 
 var hp = 3
 var target = null
@@ -49,6 +49,7 @@ func _process(dt: float) -> void:
 
 func hurt(dmgtaken) -> void:
 	if hp - dmgtaken <= 0:
+		Elements.enemiesbeaten += 1
 		queue_free()
 	else:
 		hp -= dmgtaken
