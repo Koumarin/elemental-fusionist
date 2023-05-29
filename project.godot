@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="fusion"
+config/name="Elemental Fusionist"
 run/main_scene="res://scn/main.tscn"
 config/features=PackedStringArray("4.0", "Forward Plus")
 config/icon="res://icon.svg"

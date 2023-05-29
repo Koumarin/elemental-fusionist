@@ -1,9 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://cbydaekyq2jgi"]
+[gd_scene load_steps=14 format=3 uid="uid://cbydaekyq2jgi"]
 
 [ext_resource type="PackedScene" uid="uid://bw7b2jex6oyxp" path="res://scn/player.tscn" id="1_4ubls"]
 [ext_resource type="PackedScene" uid="uid://ctecipldaqqoj" path="res://scn/enemy-spawner.tscn" id="2_gqh56"]
 [ext_resource type="PackedScene" uid="uid://b5ver45yssrae" path="res://scn/enemy.tscn" id="2_xk2fe"]
-[ext_resource type="AudioStream" uid="uid://bqmr3o3urm1qb" path="res://dat/lesongmp3.mp3" id="5_uw8br"]
+[ext_resource type="AudioStream" uid="uid://bvx81jxnkaqfi" path="res://dat/song1mp3.mp3" id="4_5kbkc"]
 [ext_resource type="Texture2D" uid="uid://gpp2qcyhgyhu" path="res://dat/labtileset.png" id="6_poqt4"]
 [ext_resource type="Script" path="res://scn/tilesspawner.gd" id="7_5ydir"]
 [ext_resource type="Texture2D" uid="uid://ckjusjn1bujkx" path="res://dat/fieldtileset.png" id="7_f4l6d"]
@@ -116,6 +116,19 @@ physics_layer_0/collision_mask = 0
 sources/0 = SubResource("TileSetAtlasSource_0x8w1")
 sources/2 = SubResource("TileSetAtlasSource_lx0yd")
 
+[sub_resource type="GDScript" id="GDScript_5wplg"]
+script/source = "extends Label
+
+func _ready() -> void:
+	Elements.connect('wave_started', _on_wave_started)
+
+func _on_wave_started() -> void:
+	visible = true
+	$Timer.start(3)
+	await $Timer.timeout
+	visible = false
+"
+
 [node name="Main" type="Node"]
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("target")]
@@ -135,7 +148,9 @@ player = NodePath("../Player")
 [node name="TileSpawner" type="Node" parent="."]
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("5_uw8br")
+stream = ExtResource("4_5kbkc")
+volume_db = -10.0
+autoplay = true
 
 [node name="labtiles" type="TileMap" parent="."]
 z_index = -2
@@ -153,3 +168,21 @@ layer_0/tile_data = PackedInt32Array(-262149, 2, 0, -196613, 2, 0, -131077, 2, 0
 z_index = -3
 position = Vector2(-384, -288)
 script = ExtResource("7_5ydir")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="NewWave" type="Label" parent="CanvasLayer"]
+visible = false
+offset_left = 408.0
+offset_top = 136.0
+offset_right = 492.0
+offset_bottom = 162.0
+scale = Vector2(4, 4)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_constants/shadow_outline_size = 8
+text = "New wave!"
+script = SubResource("GDScript_5wplg")
+
+[node name="Timer" type="Timer" parent="CanvasLayer/NewWave"]

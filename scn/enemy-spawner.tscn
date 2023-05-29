@@ -3,6 +3,8 @@
 [sub_resource type="GDScript" id="GDScript_44rre"]
 script/source = "extends Node
 
+signal wave_started
+
 
 @export var camera: Camera2D
 @export var enemy:  PackedScene
@@ -47,6 +49,7 @@ func startnextwave():
 	spawn_amt  = 20 * (1 + ((Elements.wavecounter-1) * 0.2))
 	spawn_time = 1.0 * ((Elements.wavecounter-1) * 0.2)
 	enemynumber += spawn_amt
+	emit_signal('wave_started')
 	createenemies(5000  * (1+ ((Elements.wavecounter-1) * 0.2)))
 
 
