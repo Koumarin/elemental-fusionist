@@ -1,4 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://6umvnh8xuarj"]
+[gd_scene load_steps=6 format=3 uid="uid://6umvnh8xuarj"]
+
+[ext_resource type="Texture2D" uid="uid://dqrlw72uqxss5" path="res://dat/spr/bullet.png" id="1_0onkn"]
+[ext_resource type="Texture2D" uid="uid://0nvfoys2iesb" path="res://dat/spr/bigBullet.png" id="2_ws6mm"]
 
 [sub_resource type="GDScript" id="GDScript_2l6b3"]
 script/source = "extends CharacterBody2D
@@ -9,6 +12,16 @@ var elements  := []
 var piercing  := false
 
 func _ready() -> void:
+	if piercing:
+		$Bullet.visible = false
+		$BigBullet.visible = true
+		$Area2D/CollisionShape2D.disabled = false
+		$Area2D2/CollisionShape2D.disabled = true
+	else:
+		$Bullet.visible = true
+		$BigBullet.visible = false
+		$Area2D/CollisionShape2D.disabled = true
+		$Area2D2/CollisionShape2D.disabled = false
 	print(elements)
 
 func _physics_process(delta: float) -> void:
@@ -28,6 +41,7 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 size = Vector2(16, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4vr2g"]
+size = Vector2(32, 32)
 
 [node name="Projectile" type="CharacterBody2D" groups=["Projectile"]]
 collision_layer = 2
@@ -44,4 +58,18 @@ collision_mask = 272
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("RectangleShape2D_4vr2g")
 
+[node name="Area2D2" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 272
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D2"]
+shape = SubResource("RectangleShape2D_4vr2g")
+
+[node name="Bullet" type="Sprite2D" parent="."]
+texture = ExtResource("1_0onkn")
+
+[node name="BigBullet" type="Sprite2D" parent="."]
+texture = ExtResource("2_ws6mm")
+
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_entered" from="Area2D2" to="." method="_on_area_2d_body_entered"]
