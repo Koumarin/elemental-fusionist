@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cbydaekyq2jgi"]
+[gd_scene load_steps=13 format=3 uid="uid://cbydaekyq2jgi"]
 
 [ext_resource type="PackedScene" uid="uid://bw7b2jex6oyxp" path="res://scn/player.tscn" id="1_4ubls"]
 [ext_resource type="PackedScene" uid="uid://ctecipldaqqoj" path="res://scn/enemy-spawner.tscn" id="2_gqh56"]
@@ -16,9 +16,6 @@ script/source = "extends Camera2D
 func _process(_dt: float) -> void:
 	global_position = target.global_position
 "
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_s6li0"]
-size = Vector2(640, 64)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0x8w1"]
 texture = ExtResource("6_poqt4")
@@ -124,15 +121,6 @@ sources/2 = SubResource("TileSetAtlasSource_lx0yd")
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("target")]
 script = SubResource("GDScript_j6xss")
 target = NodePath("../Player")
-
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
-position = Vector2(256, 512)
-collision_layer = 256
-collision_mask = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2(320, 32)
-shape = SubResource("RectangleShape2D_s6li0")
 
 [node name="Player" parent="." instance=ExtResource("1_4ubls")]
 unique_name_in_owner = true
