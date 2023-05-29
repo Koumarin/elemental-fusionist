@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://bw7b2jex6oyxp"]
+[gd_scene load_steps=22 format=3 uid="uid://bw7b2jex6oyxp"]
 
 [ext_resource type="Texture2D" uid="uid://ihapw5mwevxc" path="res://dat/spr/scientistBack2Walking1.png" id="1_5h0n1"]
 [ext_resource type="Texture2D" uid="uid://ce3ygehn0dc1n" path="res://dat/spr/scientistBack2Walking2.png" id="2_k07ph"]
@@ -13,8 +13,6 @@
 [ext_resource type="Texture2D" uid="uid://ctllx5xlndw64" path="res://dat/spr/scientistFrontWalking1.png" id="8_x7cq5"]
 [ext_resource type="Texture2D" uid="uid://cfj5d5lhk4jys" path="res://dat/spr/BALL.png" id="12_45aq7"]
 [ext_resource type="Texture2D" uid="uid://bjs0u1g1rnfge" path="res://dat/spr/lightetherauraspr.png" id="12_rx8dt"]
-[ext_resource type="Texture2D" uid="uid://dvxtmfwn1uggn" path="res://dat/spr/HEART.png" id="14_epbtx"]
-[ext_resource type="Texture2D" uid="uid://cio15iuxq8kvl" path="res://dat/spr/ETHER.png" id="15_cl566"]
 
 [sub_resource type="GDScript" id="GDScript_2d473"]
 script/source = "extends CharacterBody2D
@@ -38,6 +36,8 @@ var shooting := false
 @onready var shoot_timer := $%ShootTimer
 @onready var ball1       := $%Ball
 @onready var ball2       := $%Ball2
+
+@onready var icelightwallfile = preload(\"res://scn/icelightwall.tscn\")
 
 func _ready() -> void:
 	spr.play('front-left')
@@ -69,10 +69,6 @@ func _physics_process(delta: float) -> void:
 		hand.z_index = 0
 
 	hand_spr.flip_v = angle > 90 or angle < -90
-	ball1.offset = Vector2(0, -9) if angle > 90 or angle < -90 else Vector2.ZERO
-	ball2.offset = Vector2(0, -9) if angle > 90 or angle < -90 else Vector2.ZERO
-	ball1.flip_v = angle > 90 or angle < -90
-	ball2.flip_v = angle > 90 or angle < -90
 
 	if sped_up:
 		velocity = direction * SPEED * 1.5
@@ -83,7 +79,6 @@ func _physics_process(delta: float) -> void:
 	hand.look_at(get_global_mouse_position())
 	ball1.modulate = Elements.color(elements[0]) if elements.size() > 0 else Color.WHITE
 	ball2.modulate = Elements.color(elements[1]) if elements.size() > 1 else Color.WHITE
-	$Area2D.look_at(get_global_mouse_position())
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_released('shoot'):
@@ -100,25 +95,16 @@ func _shoot() -> void:
 		elif current_elements_are([3, 4]): # dark ether = machine gun
 			machine_gun()
 		elif current_elements_are([0, 1]): # fire ice = pushback
-			for e in $Area2D.get_overlapping_bodies():
-				e.push(global_position)
-		elif current_elements_are([1, 2]): # ice light = wall
 			pass
-		elif current_elements_are([1, 4]): # ice ether = freeze all
-			for e in get_tree().get_nodes_in_group('Enemy'):
-				e.freeze()
+		elif current_elements_are([1, 2]): # ice light = wall
+			icelightwall()
 		elif current_elements_are([2, 4]): #light ether = invincible, pushback and dmg aura
 			lightethershield()
 		else:
 			var projectile := make_projectile()
-			
-			if current_elements_are([0, 3]): # fire dark = big shoot
+
+			if current_elements_are([0, 3]):
 				projectile.piercing = true
-			elif current_elements_are([1, 3]): # ice dark = freeze ball
-				projectile.freezing = true
-			elif current_elements_are([0, 2]): # fire light = explosion
-				projectile.exploding = true
-		elements = elements.slice(2)
 
 func make_projectile() -> Node2D:
 	var direction  := (get_global_mouse_position() - global_position).normalized()
@@ -128,6 +114,7 @@ func make_projectile() -> Node2D:
 	projectile.global_position = global_position
 	projectile.elements = elements.slice(0, 2)
 	$/root/Main.add_child(projectile)
+	elements = elements.slice(2)
 
 	return projectile
 
@@ -181,7 +168,13 @@ func _on_light_ether_aura_timer_timeout():
 func _on_hitbox_area_entered(area):
 	if area.get_parent().get_parent().name == \"Enemies\":
 		area.get_parent().hurt(1)
-		area.get_parent().push(global_position)
+		#ADD PUSHBACK HERE
+
+func icelightwall():
+	var wall = icelightwallfile.instantiate()
+	$/root/Main.add_child(wall)
+	wall.position = position + (get_viewport().get_mouse_position() - Vector2(1152/2,648/2))
+	wall.look_at(position)
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6q5oe"]
@@ -318,9 +311,6 @@ _data = {
 [sub_resource type="CircleShape2D" id="CircleShape2D_ures1"]
 radius = 30.8087
 
-[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_whgmd"]
-points = PackedVector2Array(0, 0, 512, 256, 512, -256)
-
 [node name="Player" type="CharacterBody2D"]
 collision_mask = 273
 script = SubResource("GDScript_2d473")
@@ -393,55 +383,6 @@ collision_mask = 19
 [node name="CollisionShape2D" type="CollisionShape2D" parent="lightetheraura/hitbox"]
 shape = SubResource("CircleShape2D_ures1")
 disabled = true
-
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-offset_left = -28.0
-offset_top = -88.0
-offset_right = 28.0
-offset_bottom = -72.0
-size_flags_horizontal = 4
-alignment = 1
-
-[node name="TextureRect" type="TextureRect" parent="HBoxContainer"]
-layout_mode = 2
-texture = ExtResource("14_epbtx")
-stretch_mode = 3
-
-[node name="TextureRect2" type="TextureRect" parent="HBoxContainer"]
-layout_mode = 2
-texture = ExtResource("14_epbtx")
-stretch_mode = 3
-
-[node name="TextureRect3" type="TextureRect" parent="HBoxContainer"]
-layout_mode = 2
-texture = ExtResource("14_epbtx")
-stretch_mode = 3
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="."]
-offset_left = -34.0
-offset_top = -72.0
-offset_right = 34.0
-offset_bottom = -40.0
-alignment = 1
-
-[node name="TextureRect" type="TextureRect" parent="HBoxContainer2"]
-layout_mode = 2
-texture = ExtResource("15_cl566")
-stretch_mode = 3
-
-[node name="TextureRect2" type="TextureRect" parent="HBoxContainer2"]
-layout_mode = 2
-texture = ExtResource("15_cl566")
-stretch_mode = 3
-
-[node name="FreezeTimer" type="Timer" parent="."]
-
-[node name="Area2D" type="Area2D" parent="."]
-collision_layer = 0
-collision_mask = 16
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-shape = SubResource("ConvexPolygonShape2D_whgmd")
 
 [connection signal="timeout" from="LightEtherAuraTimer" to="." method="_on_light_ether_aura_timer_timeout"]
 [connection signal="area_entered" from="lightetheraura/hitbox" to="." method="_on_hitbox_area_entered"]

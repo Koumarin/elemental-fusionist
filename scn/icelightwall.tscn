@@ -1,0 +1,64 @@
+[gd_scene load_steps=7 format=3 uid="uid://dkp071kj6rgyv"]
+
+[ext_resource type="Script" path="res://scn/icelightwall.gd" id="1_7fyav"]
+[ext_resource type="Texture2D" uid="uid://bq7c680j2mftg" path="res://dat/zaworu.png" id="1_v6xf6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tk6mi"]
+size = Vector2(48, 336)
+
+[sub_resource type="Animation" id="Animation_ua0i0"]
+resource_name = "flash"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(0.768627, 1, 1, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_u0eg1"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_54v7t"]
+_data = {
+"RESET": SubResource("Animation_u0eg1"),
+"flash": SubResource("Animation_ua0i0")
+}
+
+[node name="icelightwall" type="StaticBody2D"]
+script = ExtResource("1_7fyav")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_tk6mi")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_v6xf6")
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "flash"
+libraries = {
+"": SubResource("AnimationLibrary_54v7t")
+}
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

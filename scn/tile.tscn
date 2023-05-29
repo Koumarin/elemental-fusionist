@@ -47,6 +47,7 @@ size = Vector2(96, 96)
 
 [node name="Tile" type="Area2D"]
 collision_layer = 4096
+collision_mask = 9
 script = SubResource("GDScript_f7a64")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
