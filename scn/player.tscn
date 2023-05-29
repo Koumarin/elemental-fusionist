@@ -142,8 +142,9 @@ func speed_up() -> void:
 
 func machine_gun() -> void:
 	shooting = true
+	$MachineTimer.start(3)
 
-	while true:
+	while shooting:
 		make_projectile()
 		shoot_timer.start(0.1)
 		await shoot_timer.timeout
@@ -207,6 +208,10 @@ func _on_hurt_box_body_entered(body: Node2D) -> void:
 		await $InvincibilityTimer.timeout
 		$Sprite.modulate = Color(1, 1, 1, 1)
 		invincible = false
+
+
+func _on_machine_timer_timeout() -> void:
+	shooting = false
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6q5oe"]
@@ -461,6 +466,9 @@ shape = SubResource("ConvexPolygonShape2D_whgmd")
 
 [node name="InvincibilityTimer" type="Timer" parent="."]
 
+[node name="MachineTimer" type="Timer" parent="."]
+
 [connection signal="body_entered" from="HurtBox" to="." method="_on_hurt_box_body_entered"]
 [connection signal="timeout" from="LightEtherAuraTimer" to="." method="_on_light_ether_aura_timer_timeout"]
 [connection signal="area_entered" from="lightetheraura/hitbox" to="." method="_on_hitbox_area_entered"]
+[connection signal="timeout" from="MachineTimer" to="." method="_on_machine_timer_timeout"]
