@@ -1,7 +1,15 @@
-[gd_scene load_steps=7 format=3 uid="uid://6umvnh8xuarj"]
+[gd_scene load_steps=16 format=3 uid="uid://6umvnh8xuarj"]
 
 [ext_resource type="Texture2D" uid="uid://dqrlw72uqxss5" path="res://dat/spr/bullet.png" id="1_0onkn"]
 [ext_resource type="Texture2D" uid="uid://0nvfoys2iesb" path="res://dat/spr/bigBullet.png" id="2_ws6mm"]
+[ext_resource type="Texture2D" uid="uid://ds8o3jrmumi0t" path="res://dat/spr/explosion/explosion1.png" id="3_f3vx6"]
+[ext_resource type="Texture2D" uid="uid://chcyqdgjifn7m" path="res://dat/spr/explosion/explosion2.png" id="4_7nv2a"]
+[ext_resource type="Texture2D" uid="uid://c8ndh7fpbjuj2" path="res://dat/spr/explosion/explosion3.png" id="5_we774"]
+[ext_resource type="Texture2D" uid="uid://dxk2p67sacc1c" path="res://dat/spr/explosion/explosion4.png" id="6_gcxgu"]
+[ext_resource type="Texture2D" uid="uid://d2tug5buhtse0" path="res://dat/spr/explosion/explosion5.png" id="7_2o688"]
+[ext_resource type="Texture2D" uid="uid://dsvvluyrwe4by" path="res://dat/spr/explosion/explosion6.png" id="8_oxues"]
+[ext_resource type="Texture2D" uid="uid://b5o8da6ia3u8n" path="res://dat/spr/explosion/explosion7.png" id="9_we0rb"]
+[ext_resource type="Texture2D" uid="uid://qfy5oh6rw5qg" path="res://dat/spr/explosion/explosion8.png" id="10_g2l0v"]
 
 [sub_resource type="GDScript" id="GDScript_2l6b3"]
 script/source = "extends CharacterBody2D
@@ -14,6 +22,7 @@ var freezing  := false
 var exploding := false
 
 func _ready() -> void:
+	$AnimatedSprite2D.stop()
 	if piercing:
 		$Bullet.visible = false
 		$BigBullet.visible = true
@@ -31,9 +40,13 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
-	if exploding:
+	if exploding and not body.is_in_group('Player'):
+		$AnimatedSprite2D.visible = true
+		$AnimatedSprite2D.play('default')
+		direction = Vector2.ZERO
 		for b in $Area2D3.get_overlapping_bodies():
 			b.hurt(3)
+		await $AnimatedSprite2D.animation_finished
 		queue_free()
 	else:
 		if body.is_in_group('Enemy'):
@@ -53,7 +66,39 @@ size = Vector2(16, 16)
 size = Vector2(32, 32)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_v033w"]
-radius = 192.666
+radius = 131.939
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_nl13e"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_f3vx6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_7nv2a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_we774")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_gcxgu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_2o688")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_oxues")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_we0rb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_g2l0v")
+}],
+"loop": false,
+"name": &"default",
+"speed": 10.0
+}]
 
 [node name="Projectile" type="CharacterBody2D" groups=["Projectile"]]
 collision_layer = 2
@@ -89,6 +134,14 @@ collision_mask = 16
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D3"]
 shape = SubResource("CircleShape2D_v033w")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+visible = false
+position = Vector2(-3.8147e-06, 4)
+scale = Vector2(2, 2.0625)
+sprite_frames = SubResource("SpriteFrames_nl13e")
+frame = 4
+frame_progress = 0.454529
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="body_entered" from="Area2D2" to="." method="_on_area_2d_body_entered"]
