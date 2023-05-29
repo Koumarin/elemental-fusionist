@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://6umvnh8xuarj"]
+[gd_scene load_steps=7 format=3 uid="uid://6umvnh8xuarj"]
 
 [ext_resource type="Texture2D" uid="uid://dqrlw72uqxss5" path="res://dat/spr/bullet.png" id="1_0onkn"]
 [ext_resource type="Texture2D" uid="uid://0nvfoys2iesb" path="res://dat/spr/bigBullet.png" id="2_ws6mm"]
@@ -31,14 +31,19 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
-	if body.is_in_group('Enemy'):
-		body.hurt(1)
-		if freezing:
-			body.freeze()
-		if not piercing:
-			queue_free()
-	else:
+	if exploding:
+		for b in $Area2D3.get_overlapping_bodies():
+			b.hurt(3)
 		queue_free()
+	else:
+		if body.is_in_group('Enemy'):
+			body.hurt(1)
+			if freezing:
+				body.freeze()
+			if not piercing:
+				queue_free()
+		else:
+			queue_free()
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_idael"]
@@ -46,6 +51,9 @@ size = Vector2(16, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4vr2g"]
 size = Vector2(32, 32)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_v033w"]
+radius = 192.666
 
 [node name="Projectile" type="CharacterBody2D" groups=["Projectile"]]
 collision_layer = 2
@@ -74,6 +82,13 @@ texture = ExtResource("1_0onkn")
 
 [node name="BigBullet" type="Sprite2D" parent="."]
 texture = ExtResource("2_ws6mm")
+
+[node name="Area2D3" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 16
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D3"]
+shape = SubResource("CircleShape2D_v033w")
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="body_entered" from="Area2D2" to="." method="_on_area_2d_body_entered"]
