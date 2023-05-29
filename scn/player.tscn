@@ -69,6 +69,10 @@ func _physics_process(delta: float) -> void:
 		hand.z_index = 0
 
 	hand_spr.flip_v = angle > 90 or angle < -90
+	ball1.offset = Vector2(0, -9) if angle > 90 or angle < -90 else Vector2.ZERO
+	ball2.offset = Vector2(0, -9) if angle > 90 or angle < -90 else Vector2.ZERO
+	ball1.flip_v = angle > 90 or angle < -90
+	ball2.flip_v = angle > 90 or angle < -90
 
 	if sped_up:
 		velocity = direction * SPEED * 1.5
