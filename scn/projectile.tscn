@@ -10,6 +10,8 @@ var direction := Vector2.ZERO
 var speed     := 40000                 # Warhammer
 var elements  := []
 var piercing  := false
+var freezing  := false
+var exploding := false
 
 func _ready() -> void:
 	if piercing:
@@ -30,7 +32,9 @@ func _physics_process(delta: float) -> void:
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	if body.is_in_group('Enemy'):
-		body.hurt()
+		body.hurt(1)
+		if freezing:
+			body.freeze()
 		if not piercing:
 			queue_free()
 	else:

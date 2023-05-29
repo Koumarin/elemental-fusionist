@@ -53,6 +53,11 @@ func hurt(dmgtaken) -> void:
 	else:
 		hp -= dmgtaken
 
+func freeze() -> void:
+	set_process(false)
+	$Timer.start(1)
+	await $Timer.timeout
+	set_process(true)
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j4i2f"]
@@ -142,3 +147,5 @@ collision_mask = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
 position = Vector2(0, 32)
 shape = SubResource("RectangleShape2D_pw2i7")
+
+[node name="Timer" type="Timer" parent="."]

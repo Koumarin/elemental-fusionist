@@ -102,13 +102,19 @@ func _shoot() -> void:
 			pass
 		elif current_elements_are([1, 2]): # ice light = wall
 			pass
+		elif current_elements_are([1, 4]): # ice ether = freeze all
+			pass
 		elif current_elements_are([2, 4]): #light ether = invincible, pushback and dmg aura
 			lightethershield()
 		else:
 			var projectile := make_projectile()
-
-			if current_elements_are([0, 3]):
+			
+			if current_elements_are([0, 3]): # fire dark = big shoot
 				projectile.piercing = true
+			elif current_elements_are([1, 3]): # ice dark = freeze ball
+				projectile.freezing = true
+			elif current_elements_are([0, 2]): # fire light = explosion
+				projectile.exploding = true
 		elements = elements.slice(2)
 
 func make_projectile() -> Node2D:
@@ -421,6 +427,8 @@ stretch_mode = 3
 layout_mode = 2
 texture = ExtResource("15_cl566")
 stretch_mode = 3
+
+[node name="FreezeTimer" type="Timer" parent="."]
 
 [connection signal="timeout" from="LightEtherAuraTimer" to="." method="_on_light_ether_aura_timer_timeout"]
 [connection signal="area_entered" from="lightetheraura/hitbox" to="." method="_on_hitbox_area_entered"]
