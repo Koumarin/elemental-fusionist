@@ -141,8 +141,9 @@ func speed_up() -> void:
 
 func machine_gun() -> void:
 	shooting = true
+	$MachineTimer.start(3)
 
-	while true:
+	while shooting:
 		make_projectile()
 		shoot_timer.start(0.1)
 		await shoot_timer.timeout
@@ -180,6 +181,10 @@ func _on_hitbox_area_entered(area):
 	if area.get_parent().get_parent().name == \"Enemies\":
 		area.get_parent().hurt(1)
 		area.get_parent().push(global_position)
+
+
+func _on_machine_timer_timeout() -> void:
+	shooting = false
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6q5oe"]
@@ -430,5 +435,8 @@ collision_mask = 16
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("ConvexPolygonShape2D_whgmd")
 
+[node name="MachineTimer" type="Timer" parent="."]
+
 [connection signal="timeout" from="LightEtherAuraTimer" to="." method="_on_light_ether_aura_timer_timeout"]
 [connection signal="area_entered" from="lightetheraura/hitbox" to="." method="_on_hitbox_area_entered"]
+[connection signal="timeout" from="MachineTimer" to="." method="_on_machine_timer_timeout"]
