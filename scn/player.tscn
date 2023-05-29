@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-[gd_scene load_steps=17 format=3 uid="uid://bw7b2jex6oyxp"]
-=======
 [gd_scene load_steps=21 format=3 uid="uid://bw7b2jex6oyxp"]
->>>>>>> Stashed changes
 
 [ext_resource type="Texture2D" uid="uid://ihapw5mwevxc" path="res://dat/spr/scientistBack2Walking1.png" id="1_5h0n1"]
 [ext_resource type="Texture2D" uid="uid://ce3ygehn0dc1n" path="res://dat/spr/scientistBack2Walking2.png" id="2_k07ph"]
@@ -15,11 +11,8 @@
 [ext_resource type="Texture2D" uid="uid://doiutc1u21cjd" path="res://dat/spr/hands.png" id="7_0xgll"]
 [ext_resource type="Texture2D" uid="uid://l68r536y2joi" path="res://dat/spr/scientistFrontWalking2.png" id="7_b5xxf"]
 [ext_resource type="Texture2D" uid="uid://ctllx5xlndw64" path="res://dat/spr/scientistFrontWalking1.png" id="8_x7cq5"]
-<<<<<<< Updated upstream
 [ext_resource type="Texture2D" uid="uid://cfj5d5lhk4jys" path="res://dat/spr/BALL.png" id="12_45aq7"]
-=======
 [ext_resource type="Texture2D" uid="uid://bjs0u1g1rnfge" path="res://dat/spr/lightetherauraspr.png" id="12_rx8dt"]
->>>>>>> Stashed changes
 
 [sub_resource type="GDScript" id="GDScript_2d473"]
 script/source = "extends CharacterBody2D
@@ -50,7 +43,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	var direction := Input.get_vector('move-left', 'move-right', 'move-up', 'move-down')
 	var angle     := rad_to_deg(get_angle_to(get_global_mouse_position()))
-	
+
 	if direction == Vector2.ZERO:
 		spr.stop()
 	if direction.y > 0:
@@ -71,15 +64,15 @@ func _physics_process(delta: float) -> void:
 	elif direction.x < 0:
 		spr.play('left')
 		hand.z_index = 0
-	
+
 	hand_spr.flip_v = angle > 90 or angle < -90
-	
+
 	if sped_up:
 		velocity = direction * SPEED * 1.5
 	else:
 		velocity = direction * SPEED
 	move_and_slide()
-	
+
 	hand.look_at(get_global_mouse_position())
 	ball1.modulate = Elements.color(elements[0]) if elements.size() > 0 else Color.WHITE
 	ball2.modulate = Elements.color(elements[1]) if elements.size() > 1 else Color.WHITE
@@ -106,20 +99,20 @@ func _shoot() -> void:
 			lightethershield()
 		else:
 			var projectile := make_projectile()
-			
+
 			if current_elements_are([0, 3]):
 				projectile.piercing = true
 
 func make_projectile() -> Node2D:
 	var direction  := (get_global_mouse_position() - global_position).normalized()
 	var projectile := PROJECTILE.instantiate()
-	
+
 	projectile.direction       = direction
 	projectile.global_position = global_position
 	projectile.elements = elements.slice(0, 2)
 	$/root/Main.add_child(projectile)
 	elements = elements.slice(2)
-	
+
 	return projectile
 
 func _can_shoot() -> bool:
@@ -134,12 +127,12 @@ func speed_up() -> void:
 
 func machine_gun() -> void:
 	shooting = true
-	
+
 	while true:
 		make_projectile()
 		shoot_timer.start(0.1)
 		await shoot_timer.timeout
-	
+
 	shooting = false
 
 func lightethershield():
@@ -147,7 +140,7 @@ func lightethershield():
 	$lightetheraura.visible = true
 	$lightetheraura/hitbox/CollisionShape2D.disabled = false
 	$LightEtherAuraTimer.start(lightethershieldduration)
-	
+
 
 func current_elements_are(lst: Array[int]) -> bool:
 	return elements.slice(0, 2).has(lst[0]) and elements.slice(0, 2).has(lst[1])
@@ -159,10 +152,7 @@ func can_pickup(elt: int) -> bool:
 	return elements.is_empty() or elements.size() < 10 or elements[0] != elt
 
 func pickup(elt: int) -> void:
-<<<<<<< Updated upstream
 	elements.push_back(elt)
-=======
-	elements.push_front(elt)
 
 
 func _on_light_ether_aura_timer_timeout():
@@ -176,7 +166,6 @@ func _on_hitbox_area_entered(area):
 	if area.get_parent().get_parent().name == \"Enemies\":
 		area.get_parent().hurt(1)
 		#ADD PUSHBACK HERE
->>>>>>> Stashed changes
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6q5oe"]
