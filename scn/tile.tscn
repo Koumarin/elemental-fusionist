@@ -20,7 +20,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		if body and body.can_pickup(type):
 			body.pickup(type)
 			depleted = true
-			visible  = false
+			$Icon.modulate = Color(0.5, 0.5, 0.5)
+			$Timer.start(5)
+			await $Timer.timeout
+			depleted = false
+			$Icon.modulate = Color.WHITE
 
 func _on_body_entered(b: Node2D) -> void:
 	body = b
@@ -29,7 +33,7 @@ func _on_body_exited(_body: Node2D) -> void:
 	body = null
 
 func updateappearance():
-	match debug_type:
+	match type:
 		0:
 			$Icon.frame = 1
 		1:
@@ -59,6 +63,8 @@ texture = ExtResource("1_qfkgk")
 centered = false
 hframes = 5
 vframes = 2
+
+[node name="Timer" type="Timer" parent="."]
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]
