@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://cvbhfd6xqeqh7"]
 
-[ext_resource type="Texture2D" uid="uid://bfc3d5c0soyi6" path="res://icon.svg" id="1_kcg66"]
+[ext_resource type="Texture2D" uid="uid://ckjusjn1bujkx" path="res://dat/fieldtileset.png" id="1_qfkgk"]
 
 [sub_resource type="GDScript" id="GDScript_f7a64"]
 script/source = "extends Area2D
@@ -13,7 +13,7 @@ var depleted = false
 @onready var type := debug_type if debug_type >= 0 else Elements.random()
 
 func _ready() -> void:
-	print(Elements.name(type))
+	updateappearance()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed('pickup') and not depleted:
@@ -27,23 +27,37 @@ func _on_body_entered(b: Node2D) -> void:
 
 func _on_body_exited(_body: Node2D) -> void:
 	body = null
+
+func updateappearance():
+	match debug_type:
+		0:
+			$Icon.frame = 1
+		1:
+			$Icon.frame = 2
+		2:
+			$Icon.frame = 5
+		3:
+			$Icon.frame = 4
+		4:
+			$Icon.frame = 3
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cqu54"]
-size = Vector2(192, 192)
+size = Vector2(96, 96)
 
 [node name="Tile" type="Area2D"]
 collision_layer = 4096
 script = SubResource("GDScript_f7a64")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(96, 96)
+position = Vector2(48, 48)
 shape = SubResource("RectangleShape2D_cqu54")
 
 [node name="Icon" type="Sprite2D" parent="."]
-position = Vector2(96, 96)
-scale = Vector2(1.5, 1.5)
-texture = ExtResource("1_kcg66")
+texture = ExtResource("1_qfkgk")
+centered = false
+hframes = 5
+vframes = 2
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]
