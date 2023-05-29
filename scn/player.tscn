@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://bw7b2jex6oyxp"]
+[gd_scene load_steps=24 format=3 uid="uid://bw7b2jex6oyxp"]
 
 [ext_resource type="Texture2D" uid="uid://ihapw5mwevxc" path="res://dat/spr/scientistBack2Walking1.png" id="1_5h0n1"]
 [ext_resource type="Texture2D" uid="uid://ce3ygehn0dc1n" path="res://dat/spr/scientistBack2Walking2.png" id="2_k07ph"]
@@ -13,6 +13,8 @@
 [ext_resource type="Texture2D" uid="uid://ctllx5xlndw64" path="res://dat/spr/scientistFrontWalking1.png" id="8_x7cq5"]
 [ext_resource type="Texture2D" uid="uid://cfj5d5lhk4jys" path="res://dat/spr/BALL.png" id="12_45aq7"]
 [ext_resource type="Texture2D" uid="uid://bjs0u1g1rnfge" path="res://dat/spr/lightetherauraspr.png" id="12_rx8dt"]
+[ext_resource type="Texture2D" uid="uid://dvxtmfwn1uggn" path="res://dat/spr/HEART.png" id="14_epbtx"]
+[ext_resource type="Texture2D" uid="uid://cio15iuxq8kvl" path="res://dat/spr/ETHER.png" id="15_cl566"]
 
 [sub_resource type="GDScript" id="GDScript_2d473"]
 script/source = "extends CharacterBody2D
@@ -375,6 +377,46 @@ collision_mask = 19
 [node name="CollisionShape2D" type="CollisionShape2D" parent="lightetheraura/hitbox"]
 shape = SubResource("CircleShape2D_ures1")
 disabled = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+offset_left = -28.0
+offset_top = -88.0
+offset_right = 28.0
+offset_bottom = -72.0
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("14_epbtx")
+stretch_mode = 3
+
+[node name="TextureRect2" type="TextureRect" parent="HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("14_epbtx")
+stretch_mode = 3
+
+[node name="TextureRect3" type="TextureRect" parent="HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("14_epbtx")
+stretch_mode = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+offset_left = -34.0
+offset_top = -72.0
+offset_right = 34.0
+offset_bottom = -40.0
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("15_cl566")
+stretch_mode = 3
+
+[node name="TextureRect2" type="TextureRect" parent="HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("15_cl566")
+stretch_mode = 3
 
 [connection signal="timeout" from="LightEtherAuraTimer" to="." method="_on_light_ether_aura_timer_timeout"]
 [connection signal="area_entered" from="lightetheraura/hitbox" to="." method="_on_hitbox_area_entered"]
