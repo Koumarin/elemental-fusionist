@@ -23,7 +23,7 @@ const lightethershieldduration = 7
 
 var elements := []
 
-var health := 100
+var health := 3
 var invincible = false
 
 var sped_up  := false
@@ -161,7 +161,16 @@ func current_elements_are(lst: Array[int]) -> bool:
 	return elements.slice(0, 2).has(lst[0]) and elements.slice(0, 2).has(lst[1])
 
 func change_health(amt: int) -> void:
-	health = clamp(health + amt, 0, 100)
+	health = clamp(health + amt, 0, 3)
+	
+	for idx in $HBoxContainer.get_child_count():
+		if idx > health - 1:
+			$HBoxContainer.get_child(idx).visible = false
+		else:
+			$HBoxContainer.get_child(idx).visible = true
+	
+	if health == 0:
+		get_tree().reload_current_scene()
 
 func can_pickup(elt: int) -> bool:
 	return elements.is_empty() or elements.size() < 10 or elements[0] != elt
@@ -187,6 +196,17 @@ func icelightwall():
 	$/root/Main.add_child(wall)
 	wall.position = position + (get_viewport().get_mouse_position() - Vector2(1152/2,648/2))
 	wall.look_at(position)
+
+
+func _on_hurt_box_body_entered(body: Node2D) -> void:
+	if not invincible and body.is_in_group('Enemy'):
+		invincible = true
+		$Sprite.modulate = Color(1, 1, 1, 0.5)
+		$InvincibilityTimer.start(1)
+		change_health(-1)
+		await $InvincibilityTimer.timeout
+		$Sprite.modulate = Color(1, 1, 1, 1)
+		invincible = false
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6q5oe"]
@@ -352,6 +372,8 @@ scale = Vector2(0.4, 0.4)
 texture = ExtResource("10_dn7s1")
 
 [node name="HurtBox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 16
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
 shape = SubResource("RectangleShape2D_ab18d")
@@ -437,5 +459,8 @@ collision_mask = 16
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("ConvexPolygonShape2D_whgmd")
 
+[node name="InvincibilityTimer" type="Timer" parent="."]
+
+[connection signal="body_entered" from="HurtBox" to="." method="_on_hurt_box_body_entered"]
 [connection signal="timeout" from="LightEtherAuraTimer" to="." method="_on_light_ether_aura_timer_timeout"]
 [connection signal="area_entered" from="lightetheraura/hitbox" to="." method="_on_hitbox_area_entered"]
