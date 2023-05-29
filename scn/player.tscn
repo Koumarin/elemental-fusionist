@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://bw7b2jex6oyxp"]
+[gd_scene load_steps=22 format=3 uid="uid://bw7b2jex6oyxp"]
 
 [ext_resource type="Texture2D" uid="uid://bdd8advn3auv8" path="res://dat/spr/playerBack1.png" id="1_pw7id"]
 [ext_resource type="Texture2D" uid="uid://dna44f5lmradx" path="res://dat/spr/playerBack2.png" id="2_1wdda"]
@@ -12,7 +12,6 @@
 [ext_resource type="Texture2D" uid="uid://dryym3kjm7ttf" path="res://dat/spr/orb.png" id="10_dn7s1"]
 [ext_resource type="Texture2D" uid="uid://bjs0u1g1rnfge" path="res://dat/spr/lightetherauraspr.png" id="12_rx8dt"]
 [ext_resource type="Texture2D" uid="uid://dvxtmfwn1uggn" path="res://dat/spr/HEART.png" id="14_epbtx"]
-[ext_resource type="Texture2D" uid="uid://cio15iuxq8kvl" path="res://dat/spr/ETHER.png" id="15_cl566"]
 
 [sub_resource type="GDScript" id="GDScript_2d473"]
 script/source = "extends CharacterBody2D
@@ -100,7 +99,8 @@ func _shoot() -> void:
 		elif current_elements_are([3, 4]): # dark ether = machine gun
 			machine_gun()
 		elif current_elements_are([0, 1]): # fire ice = pushback
-			pass
+			for e in $Area2D.get_overlapping_bodies():
+				e.push(global_position)
 		elif current_elements_are([1, 2]): # ice light = wall
 			icelightwall()
 		elif current_elements_are([1, 4]): # ice ether = freeze all
@@ -174,7 +174,7 @@ func change_health(amt: int) -> void:
 		get_tree().reload_current_scene()
 
 func can_pickup(elt: int) -> bool:
-	return elements.is_empty() or elements.size() < 10 or elements[0] != elt
+	return elements.is_empty() or elements.size() < 2 or elements[0] != elt
 
 func pickup(elt: int) -> void:
 	elements.push_back(elt)
@@ -417,9 +417,9 @@ disabled = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 offset_left = -28.0
-offset_top = -88.0
+offset_top = -56.0
 offset_right = 28.0
-offset_bottom = -72.0
+offset_bottom = -40.0
 size_flags_horizontal = 4
 alignment = 1
 
@@ -436,23 +436,6 @@ stretch_mode = 3
 [node name="TextureRect3" type="TextureRect" parent="HBoxContainer"]
 layout_mode = 2
 texture = ExtResource("14_epbtx")
-stretch_mode = 3
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="."]
-offset_left = -34.0
-offset_top = -72.0
-offset_right = 34.0
-offset_bottom = -40.0
-alignment = 1
-
-[node name="TextureRect" type="TextureRect" parent="HBoxContainer2"]
-layout_mode = 2
-texture = ExtResource("15_cl566")
-stretch_mode = 3
-
-[node name="TextureRect2" type="TextureRect" parent="HBoxContainer2"]
-layout_mode = 2
-texture = ExtResource("15_cl566")
 stretch_mode = 3
 
 [node name="FreezeTimer" type="Timer" parent="."]
