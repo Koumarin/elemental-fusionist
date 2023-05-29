@@ -103,6 +103,7 @@ func _shoot() -> void:
 
 			if current_elements_are([0, 3]):
 				projectile.piercing = true
+		elements = elements.slice(2)
 
 func make_projectile() -> Node2D:
 	var direction  := (get_global_mouse_position() - global_position).normalized()
@@ -112,7 +113,6 @@ func make_projectile() -> Node2D:
 	projectile.global_position = global_position
 	projectile.elements = elements.slice(0, 2)
 	$/root/Main.add_child(projectile)
-	elements = elements.slice(2)
 
 	return projectile
 
