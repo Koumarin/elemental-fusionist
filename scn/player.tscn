@@ -103,7 +103,8 @@ func _shoot() -> void:
 		elif current_elements_are([1, 2]): # ice light = wall
 			pass
 		elif current_elements_are([1, 4]): # ice ether = freeze all
-			pass
+			for e in get_tree().get_nodes_in_group('Enemy'):
+				e.freeze()
 		elif current_elements_are([2, 4]): #light ether = invincible, pushback and dmg aura
 			lightethershield()
 		else:
