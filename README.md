@@ -12,6 +12,6 @@ You are a scientist who made a gun that can fuse two elements together, creating
 ## Credits
 
 - Alice Figueiredo - Programming
-- Antip            - Programming, Art, Music (twitter.com/HmmmMayhaps)
+- Antip            - Programming, Art, Music ([@HmmmMayhaps](twitter.com/HmmmMayhaps))
 - Katarina Martins - Art
 - Ap Reibanme      - "the really annoying person around."
